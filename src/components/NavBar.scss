@@ -1,0 +1,35 @@
+nav {
+    width: 100vw;
+    height: 30px;
+    background-color: aqua;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 10px 30px;
+    .anchorContainer {
+        width: fit-content;
+        overflow: hidden;
+    }
+    a {
+        padding-right: 5px;
+        text-decoration: none;
+        &.page {
+            font-size: 1rem;
+        }
+        &.anchor {
+            font-size: 0.8rem;
+            color: gray;
+            @keyframes slideOut {
+                0% {
+                    margin-left: -100%;
+                }
+                100% {
+                    margin-left: 0;
+                }
+            }
+            &:first-of-type {
+                animation: 0.5s ease-out 0s 1 slideOut;
+            }
+        }
+    }
+}
