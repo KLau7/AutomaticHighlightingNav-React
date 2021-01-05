@@ -1,11 +1,14 @@
 nav {
+    position: fixed;
     width: 100vw;
     height: 30px;
-    background-color: aqua;
+    // background-color: rgba(0, 0, 0, 0.5);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
     list-style: none;
     display: flex;
     align-items: center;
-    padding: 10px 30px;
+    justify-content: center;
+    padding: 10px 30px 20px 30px;
     .anchorContainer {
         width: fit-content;
         overflow: hidden;
@@ -13,12 +16,13 @@ nav {
     a {
         padding-right: 5px;
         text-decoration: none;
+        color: greenyellow;
         &.page {
             font-size: 1rem;
         }
         &.anchor {
             font-size: 0.8rem;
-            color: gray;
+            color: white;
             @keyframes slideOut {
                 0% {
                     margin-left: -100%;
@@ -30,6 +34,9 @@ nav {
             &:first-of-type {
                 animation: 0.5s ease-out 0s 1 slideOut;
             }
+        }
+        &.active {
+            font-weight: bold;
         }
     }
 }
