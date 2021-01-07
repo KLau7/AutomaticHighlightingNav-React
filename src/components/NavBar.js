@@ -1,11 +1,31 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { __RouterContext } from 'react-router';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
+import { useHistory, __RouterContext } from 'react-router';
 import { Link } from 'react-router-dom';
-import _ from 'lodash';
 
 import './NavBar.scss';
 
-function Navbar() {
+const Navbar = () => {
+
+    const queuedThrottle = (fn, timeout = 500) => {
+        var queue = null;
+        var timer = null;
+            
+        return function () {
+            if (!timer) {
+                timer = setTimeout(() => {
+                    queue && queue(...arguments);
+                    timer = null;
+                    queue = null;
+                }, timeout);
+                fn(...arguments);
+            }else {
+                queue = () => {
+                    fn(...arguments);
+                }
+            }
+        }
+    }
+
 
     const useLocation = () => {
         const [, setUpdate] = useState(null);
@@ -21,15 +41,16 @@ function Navbar() {
 
     const { location } = useLocation();
 
-    const [ currentSection, setCurrentSection] = useState(1); 
 
     // Custom hook
     const useEventListener = (element, event, handler) => {
         useEffect(() => {
-            element.addEventListener(event, handler);
-            return () => element.removeEventListener(event, handler);
-        });
+            const throttledHandler = queuedThrottle(handler, 100);
+            element.addEventListener(event, throttledHandler);
+            return () => element.removeEventListener(event, throttledHandler);
+        }, [element, event, handler]);
     }
+    
 
     // Listen on viewport height
     const [ viewportHeight, setViewportHeight ] = useState(window.innerHeight);
@@ -37,15 +58,31 @@ function Navbar() {
         setViewportHeight(window.innerHeight);
     }
     useEventListener(window, 'resize', updateViewportHeight);
-    
+
+
     // Listen on scroll position
     const [ currentScroll, setCurrentScroll] = useState(0);
-    const updateCurrentScroll = _.throttle((e) => {
-            setCurrentScroll(e.target.documentElement.scrollTop);
-            setCurrentSection(parseInt(currentScroll / viewportHeight) + 1)
-            console.log(currentSection);
-    }, 2000);
+    const updateCurrentScroll = useCallback((e) => {
+        setCurrentScroll(e.target.documentElement.scrollTop);
+    }, []);
+    
+    const [ currentSection, setCurrentSection] = useState(1); 
+    useEffect(() => {
+        const sectionNum = Math.floor((currentScroll / viewportHeight) + 0.5)
+        setCurrentSection(sectionNum);
+    }, [currentScroll, viewportHeight]);
+
+    const history = useHistory();
+    useEffect(() => {
+        const sectionNames = ['first', 'second', 'third'];
+        history.push({
+            pathname: location.pathname,
+            hash: `#${sectionNames[currentSection]}`
+        })
+    }, [currentSection]);
+
     useEventListener(window, 'scroll', updateCurrentScroll);
+
 
     return (
         <nav>
