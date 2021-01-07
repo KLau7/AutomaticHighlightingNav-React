@@ -1,10 +1,13 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { useHistory, __RouterContext } from 'react-router';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { getHash } from '../store/selectors';
+import { pushHash } from '../store/actions'
 
 import './NavBar.scss';
 
-const Navbar = () => {
+const Navbar = ({ hash, pushHash }) => {
 
     const queuedThrottle = (fn, timeout = 500) => {
         var queue = null;
@@ -105,4 +108,9 @@ const Navbar = () => {
     )
 }
 
-export default Navbar;
+
+const mapStateToProps = (state) => {
+    return {hash: getHash(state)};
+}
+
+export default connect(mapStateToProps, { pushHash })(Navbar);

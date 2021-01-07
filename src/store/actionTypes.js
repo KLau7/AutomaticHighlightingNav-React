@@ -1,0 +1,1 @@
+export const PUSH_HASH = 'PUSH_HASH';
