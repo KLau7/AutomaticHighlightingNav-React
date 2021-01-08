@@ -1,100 +1,53 @@
-import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { useHistory, __RouterContext } from 'react-router';
+import React, { Children, useState, useEffect, useReducer, useRef } from 'react';
+import { findDOMNode } from 'react-dom';
+import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
+
 import { connect } from 'react-redux';
-import { getHash } from '../store/selectors';
+import { getHash, getSectionNames } from '../store/selectors';
 import { pushHash } from '../store/actions'
 
+import { useEventListener, useLocation } from '../utils/customHooks';
+
 import './NavBar.scss';
+import Landing from '../pages/Landing';
 
-const Navbar = ({ hash, pushHash }) => {
-
-    const queuedThrottle = (fn, timeout = 500) => {
-        var queue = null;
-        var timer = null;
-            
-        return function () {
-            if (!timer) {
-                timer = setTimeout(() => {
-                    queue && queue(...arguments);
-                    timer = null;
-                    queue = null;
-                }, timeout);
-                fn(...arguments);
-            }else {
-                queue = () => {
-                    fn(...arguments);
-                }
-            }
-        }
-    }
-
-
-    const useLocation = () => {
-        const [, setUpdate] = useState(null);
-        
-        const routerContext = useContext(__RouterContext);
-        useEffect(() => {
-            const forceUpdate = () => { setUpdate( {} ) };
-            return routerContext.history.listen(forceUpdate);
-        }, [ routerContext ]);
-
-        return routerContext;
-    }
-
+// const Navbar = (props, { hash, pushHash }) => {
+const Navbar = (props) => {
+    
+    // Listen on url
     const { location } = useLocation();
-
-
-    // Custom hook
-    const useEventListener = (element, event, handler) => {
-        useEffect(() => {
-            const throttledHandler = queuedThrottle(handler, 100);
-            element.addEventListener(event, throttledHandler);
-            return () => element.removeEventListener(event, throttledHandler);
-        }, [element, event, handler]);
-    }
     
+    const hashHandler = () => {
+        const sectionNames = ['first', 'second', 'third'];
 
-    // Listen on viewport height
-    const [ viewportHeight, setViewportHeight ] = useState(window.innerHeight);
-    const updateViewportHeight = () => {
-        setViewportHeight(window.innerHeight);
+        const sectionNum = Math.floor((window.scrollY / window.innerHeight) + 0.5)
+        let hashStr = `#${sectionNames[sectionNum]}`
+        history.push({
+            hash: hashStr
+        })
+        // pushHash({ hash: hashStr})
     }
-    useEventListener(window, 'resize', updateViewportHeight);
 
-
-    // Listen on scroll position
-    const [ currentScroll, setCurrentScroll] = useState(0);
-    const updateCurrentScroll = useCallback((e) => {
-        setCurrentScroll(e.target.documentElement.scrollTop);
-    }, []);
-    
-    const [ currentSection, setCurrentSection] = useState(1); 
-    useEffect(() => {
-        const sectionNum = Math.floor((currentScroll / viewportHeight) + 0.5)
-        setCurrentSection(sectionNum);
-    }, [currentScroll, viewportHeight]);
+    useEventListener(window, 'scroll', hashHandler, 100);
+    useEventListener(window, 'resize', hashHandler, 100);
 
     const history = useHistory();
     useEffect(() => {
-        const sectionNames = ['first', 'second', 'third'];
-        history.push({
-            pathname: location.pathname,
-            hash: `#${sectionNames[currentSection]}`
-        })
-    }, [currentSection]);
-
-    useEventListener(window, 'scroll', updateCurrentScroll);
-
+        hashHandler();
+    // }, [history, pushHash]);
+    }, [history]);
 
     return (
+        <>
         <nav>
-            <Link to="/" className={`page ${ location.pathname === '/' ? 'active' : '' }`}>Home</Link>
+            <Link to="/#first" className={`page ${ location.pathname === '/' ? 'active' : '' }`}>Home</Link>
             { location.pathname === '/' &&
                 <div className='anchorContainer'>
                     <a href='#first' className={`anchor ${ location.hash === '#first' ? 'active' : '' }`}>First</a>
                     <a href='#second' className={`anchor ${ location.hash === '#second' ? 'active' : '' }`}>Second</a>
                     <a href='#third' className={`anchor ${ location.hash === '#third' ? 'active' : '' }`}>Third</a>
+                    {/* <button onClick={focusChild}>BUtton</button> */}
                 </div>
             }
             <Link to="/more" className={`page ${ location.pathname === '/more' ? 'active' : '' }`}>More</Link>
@@ -105,12 +58,18 @@ const Navbar = ({ hash, pushHash }) => {
                 </div>
             }
         </nav>
+        </>
     )
 }
 
 
 const mapStateToProps = (state) => {
-    return {hash: getHash(state)};
+
+    return {
+        hash: getHash(state),
+        sectionNames: getSectionNames(state)
+    };
 }
 
-export default connect(mapStateToProps, { pushHash })(Navbar);
+export default Navbar;
+// export default connect(mapStateToProps, { pushHash })(Navbar);

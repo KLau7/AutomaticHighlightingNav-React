@@ -7,7 +7,7 @@ function AppRouter() {
     return (
         <Switch>
             <Route path="/" exact={true} component={ Landing } />
-            <Route path="/more" exact={true} component={ MoreDetails } />
+            <Route path="/more" exact={true} component={ Landing } />
         </Switch>
     )
 }

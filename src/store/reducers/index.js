@@ -1,10 +1,3 @@
-import { PUSH_HASH } from '../actionTypes';
+import navReducers from './navReducers';
 
-export default function navReducer(state = { hash: '#first' }, action) {
-    switch (action.type) {
-      case PUSH_HASH:
-        return action.payload.hash;
-      default:
-        return state;
-    }
-}
+export default navReducers;

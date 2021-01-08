@@ -4,6 +4,7 @@ import './App.css';
 
 import AppRouter from './AppRouter';
 import NavBar from './components/NavBar';
+import Landing from './pages/Landing';
 
 function App() {
 

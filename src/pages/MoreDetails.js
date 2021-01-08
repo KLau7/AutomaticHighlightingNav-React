@@ -3,7 +3,7 @@
 function Landing() {
   return (
       <>
-        <h1>More Details</h1>
+        <section id='first'></section>
       </>
   );
 }
