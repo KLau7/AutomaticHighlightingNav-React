@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Landing from './pages/Landing';

@@ -1,11 +1,13 @@
-// import logo from './logo.svg';
+import './MoreDetails.scss';
 
-function Landing() {
+function MoreDetails() {
   return (
       <>
-        <section id='first'></section>
+        <section id='a'></section>
+        <section id='b'></section>
+        <section id='c'></section>
       </>
   );
 }
 
-export default Landing;
+export default MoreDetails;

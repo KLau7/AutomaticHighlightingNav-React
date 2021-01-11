@@ -1,3 +1,9 @@
+.navPageTabContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+
 nav {
     position: fixed;
     width: 100vw;

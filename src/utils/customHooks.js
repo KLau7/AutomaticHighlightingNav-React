@@ -12,6 +12,7 @@ export const useEventListener = (element, event, handler, throttle = 0) => {
 }
 
 
+// Must be used inside Router
 export const useLocation = () => {
     const [, setUpdate] = useState(null);
     

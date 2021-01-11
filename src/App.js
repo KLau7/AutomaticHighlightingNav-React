@@ -3,15 +3,15 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 
 import AppRouter from './AppRouter';
-import NavBar from './components/NavBar';
+import PageContainer from './container/PageContainer';
 
 function App() {
 
   return (
     <Router>
-      <NavBar>
+      <PageContainer>
         <AppRouter></AppRouter>
-      </NavBar>
+      </PageContainer>
     </Router>
   );
 }

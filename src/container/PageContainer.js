@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
-
 
 import { useEventListener, useLocation } from '../utils/customHooks';
 
-import './NavBar.scss';
-
-import Nav from './Nav';
+import Nav from '../components/Nav';
 
 
-const Navbar = (props) => {
+const PageContainer = (props) => {
     
     // Listen on url
     const { location } = useLocation();
@@ -21,6 +17,8 @@ const Navbar = (props) => {
     
     const ref = useRef(null);
     
+
+    // functions / handlers
     const hashHandler = (id) => {
         history.push({ hash: `#${id}` });
     }
@@ -33,13 +31,15 @@ const Navbar = (props) => {
         return nodes;
     }
 
-    const getSectionNames = () => {
+    const getSectionNamesRef = useRef(null);
+    getSectionNamesRef.current = () => {
         let names = [];
         getSectionNodes().forEach(node => { names.push(node.id); });
-        setSectionNames(names);
+        return names;
     }
 
-    const getCurrentSection = () => {
+    const getCurrentSectionRef = useRef(null);
+    getCurrentSectionRef.current = () => {
         getSectionNodes().forEach(node => {
             const scrollMid = window.scrollY + (window.innerHeight / 2);
             if (scrollMid >= node.offsetTop && scrollMid < node.offsetTop + node.clientHeight) {
@@ -48,18 +48,22 @@ const Navbar = (props) => {
         })
     }
 
+
+    // hooks
     useEffect(() => {
-        getSectionNames();
-        getCurrentSection();
-    }, [ location.pathname, ref ])
+        console.log(ref.current.childNodes);
+        setSectionNames(getSectionNamesRef.current());
+        getCurrentSectionRef.current();
+    }, [ location.pathname, ref, getSectionNamesRef, getCurrentSectionRef ]);
 
-    useEventListener(window, 'scroll', getCurrentSection, 100);
-    useEventListener(window, 'resize', getCurrentSection, 300);
+    useEventListener(window, 'scroll', getCurrentSectionRef.current, 100);
+    useEventListener(window, 'resize', getCurrentSectionRef.current, 300);
 
+    
     return (
         <>
             <header>
-                <Nav current={ location.hash } sections={ sectionNames } pathname={ location.pathname }></Nav>
+                <Nav current={ location.hash } sections={ sectionNames } pathname={ location.pathname } />
             </header>
             <main ref={ref}>
                 {props.children}
@@ -69,4 +73,4 @@ const Navbar = (props) => {
 }
 
 
-export default Navbar;
+export default PageContainer;
