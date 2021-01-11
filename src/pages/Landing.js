@@ -1,9 +1,6 @@
 // import logo from './logo.svg';
-import { forwardRef, useContext, useEffect, useRef, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import './Landing.scss';
-
-import { navContext } from '../components/NavBar';
 
 const Landing = () => {
 
