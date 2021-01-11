@@ -1,9 +1,12 @@
 // import logo from './logo.svg';
-import { forwardRef, useRef } from 'react';
+import { forwardRef, useContext, useEffect, useRef, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import './Landing.scss';
 
-const Landing = forwardRef((props, ref) => {
+import { navContext } from '../components/NavBar';
+
+const Landing = () => {
+
 
   return (
     <>
@@ -20,6 +23,6 @@ const Landing = forwardRef((props, ref) => {
       </section>
     </>
   );
-})
+}
 
 export default Landing;
