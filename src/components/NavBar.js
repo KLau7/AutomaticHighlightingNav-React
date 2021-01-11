@@ -7,6 +7,7 @@ import { useEventListener, useLocation } from '../utils/customHooks';
 
 import './NavBar.scss';
 
+import Nav from './Nav';
 
 
 const Navbar = (props) => {
@@ -33,7 +34,6 @@ const Navbar = (props) => {
     }
 
     const getSectionNames = () => {
-        console.log('getting section names');
         let names = [];
         getSectionNodes().forEach(node => { names.push(node.id); });
         setSectionNames(names);
@@ -59,25 +59,7 @@ const Navbar = (props) => {
     return (
         <>
             <header>
-                <nav>
-                    <Link to="/" className={`page ${ location.pathname === '/' ? 'active' : '' }`}>Home</Link>
-                    { location.pathname === '/' &&
-                        <div className='anchorContainer'>
-                            {sectionNames.map((section) => {
-                                return (
-                                    <a key={section} href={`#${section}`} className={`anchor ${ location.hash === (`#${section}`) ? 'active' : ''}`}>{section}</a>
-                                )
-                            })}
-                        </div>
-                    }
-                    <Link to="/more" className={`page ${ location.pathname === '/more' ? 'active' : '' }`}>More</Link>
-                    { location.pathname === '/more' &&
-                        <div className='anchorContainer'>
-                            <a href='#first' className={`anchor ${ location.hash === '#first' ? 'active' : '' }`}>First</a>
-                            <a href='#second' className={`anchor ${ location.hash === '#second' ? 'active' : '' }`}>Second</a>
-                        </div>
-                    }
-                </nav>
+                <Nav current={ location.hash } sections={ sectionNames } pathname={ location.pathname }></Nav>
             </header>
             <main ref={ref}>
                 {props.children}
