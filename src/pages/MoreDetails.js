@@ -3,9 +3,11 @@ import './MoreDetails.scss';
 function MoreDetails() {
   return (
       <>
-        <section id='a'></section>
-        <section id='b'></section>
-        <section id='c'></section>
+        <section id='more1'></section>
+        <section id='more2'></section>
+        <section id='more3'></section>
+        <section id='more4'></section>
+        <section id='more5'></section>
       </>
   );
 }

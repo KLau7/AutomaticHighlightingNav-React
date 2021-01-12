@@ -1,14 +1,16 @@
 import { Switch, Route } from 'react-router-dom';
 
-import Landing from './pages/Landing';
-import MoreDetails from './pages/MoreDetails';
+import ROUTE_DATA from './contants/route_data';
 
 function AppRouter() {
 
+    const routeComponents = Object.keys(ROUTE_DATA).map((key) => (
+        <Route exact path={ key } component={ ROUTE_DATA[key].component } key={key} />
+    ));
+
     return (
         <Switch>
-            <Route path="/" exact={true} component={ Landing } />
-            <Route path="/more" exact={true} component={ MoreDetails } />
+            {routeComponents}
         </Switch>
     )
 }
