@@ -19,14 +19,14 @@ nav {
         width: fit-content;
         overflow: hidden;
     }
-    a {
+    .nav-btn {
         padding-right: 5px;
         text-decoration: none;
         color: greenyellow;
-        &.page {
+        &.page-btn {
             font-size: 1rem;
         }
-        &.anchor {
+        &.anchor-btn {
             font-size: 0.8rem;
             color: white;
             @keyframes slideOut {

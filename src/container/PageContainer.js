@@ -51,19 +51,26 @@ const PageContainer = (props) => {
 
     // hooks
     useEffect(() => {
-        console.log(ref.current.childNodes);
         setSectionNames(getSectionNamesRef.current());
         getCurrentSectionRef.current();
-    }, [ location.pathname, ref, getSectionNamesRef, getCurrentSectionRef ]);
+    }, [ location.pathname, ref, getSectionNamesRef, getCurrentSectionRef, setSectionNames ]);
 
     useEventListener(window, 'scroll', getCurrentSectionRef.current, 100);
     useEventListener(window, 'resize', getCurrentSectionRef.current, 300);
 
-    
+    // scroll function for nav bar, implemented to fix anchor tag fighting onscroll set hash
+    const scrollFunction = (id) => {
+        let offset;
+        getSectionNodes().forEach(node => {
+            node.id === id && (offset = node.offsetTop);
+        })
+        offset !== undefined && window.scrollTo(0, offset);
+    }
+
     return (
         <>
             <header>
-                <Nav current={ location.hash } sections={ sectionNames } pathname={ location.pathname } />
+                <Nav current={ location.hash } sections={ sectionNames } pathname={ location.pathname } scrollFunction={scrollFunction} />
             </header>
             <main ref={ref}>
                 {props.children}
